@@ -21,9 +21,9 @@ https://plotly.com/python/plotly-fundamentals/
         pip install pandas==2.2.2
         pip install plotly=5.22.0
         pip install dash==2.17.1
-        pip install jupyterlab "ipywidgets>=7.5
+        pip install sqlalchem
+        pip install dash_iconify
         pip install dash dash-core-components dash-html-components jupyter-dash dash-bootstrap-components
-        jupyter labextension install jupyterlab-plotly@4.8.2
 
 3. Deploy locally
         
@@ -37,7 +37,7 @@ https://plotly.com/python/plotly-fundamentals/
 - Initial Traffic: Table "Proto","AckDat","sHops","Seq", "State", "TcpRtt", "dmeansz","offset","sttl", "flgs", "mean", "cause", "stcpb", "dloss","smeansz","loss", "dttl", "sbytes", "bytes"  
 - Processed Traffic: Table 'tcp', 'AckDat', 'sHops', 'Seq', 'RST', 'TcpRtt', 'REQ', 'dMeanPktSz','Offset', 'CON', 'FIN', 'sTtl', ' e        ', 'INT', 'Mean', 'Status', 'icmp',
  'SrcTCPBase', ' e d      ', 'sMeanPktSz', 'DstLoss', 'Loss', 'dTtl', 'SrcBytes', 'TotBytes' 
-- Time	Source IP	Destination IP	Attack Type	Tool: table 
+
 - Define benign and malicious: figure-factory-table (4.4)
         
         current_time = datetime.datetime.now(pytz.timezone('Etc/GMT-7')).strftime("%H:%M:%S-%d/%m/%Y")

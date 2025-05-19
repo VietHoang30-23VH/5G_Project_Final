@@ -35,7 +35,7 @@ def register_callbacks(app):
         
         if user:
             new_session_data = {'logged_in': True, 'username': username}
-            return new_session_data, "Đăng nhập thành công, đang chuyển hướng...", "/dashboard"
+            return new_session_data, "Đăng nhập thành công.", "/dashboard"
         else:
             return no_update, "Tên đăng nhập hoặc mật khẩu không chính xác!", no_update
 

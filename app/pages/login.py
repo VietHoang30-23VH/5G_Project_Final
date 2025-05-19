@@ -87,7 +87,7 @@ def create_login_layout():
                             ),
                             html.Div(
                                 id="message-area",
-                                style={"marginTop": "10px"}
+                                style={"marginTop": "10px"},
                             ),
                             html.Div(
                                 className='server-status',
@@ -104,7 +104,7 @@ def create_login_layout():
             ),
             dcc.Interval(
                 id='interval-component',
-                interval=1*1000,  # Cập nhật mỗi 1 gi moratorium
+                interval=1*1000,  
             ),
             dcc.Store(id='user-session', storage_type='session')
         ]

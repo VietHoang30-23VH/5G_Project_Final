@@ -6,6 +6,7 @@ from app.callbacks import login_callbacks, dashboard_callbacks, monitoring_callb
 
 # CSS bên ngoài
 external_stylesheets = [
+    dbc.themes.BOOTSTRAP,
     dbc.themes.SANDSTONE,
     'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css'
 ]

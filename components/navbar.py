@@ -1,0 +1,44 @@
+import dash_bootstrap_components as dbc
+from dash import html
+
+def create_navbar(username):
+    return dbc.Navbar(
+        [
+            dbc.NavbarBrand(
+                "5G Network Dashboard",
+                href="/",
+                className="navbar-brand-custom ms-2 fs-3 fw-semibold",
+            ),
+            dbc.Nav(
+                [
+                    dbc.NavItem(dbc.NavLink("WORKPLACE", href="/", active="exact", className="nav-link-custom text-light fs-5")),
+                    dbc.NavItem(dbc.NavLink("OVERVIEW", href="/data-overview", active="exact", className="nav-link-custom fs-5")),
+                    dbc.NavItem(dbc.NavLink("ABOUT", href="/about", active="exact", className="nav-link-custom fs-5")),
+                ],
+                className="mx-auto",
+                navbar=True,
+
+            ),
+            dbc.Nav(
+                [
+                    html.Span(f"Welcome, {username} !", style={"color": "white", "margin-right": "10px","margin-top": "10px", "font-size": "20px"}),
+                    html.A(
+                        dbc.Button("LOG OUT", className="me-2"),
+                        href="/logout",
+                    ),
+                ],
+                className="ml-auto",
+                navbar=True
+            ),
+        ],
+        color="#1C3782",
+        className="mb-4",
+        style={
+            "height": "60px",
+            "width": "100%",
+            "position": "fixed",
+            "top": "0",
+            "left": "0",
+            "z-index": "1000"
+        }
+    )
