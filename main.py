@@ -202,6 +202,7 @@ app.layout = html.Div([
 
 # Đăng ký callback
 login_callbacks.register_callbacks(app)
+dashboard_callbacks.network_flow_callbacks(app)
 
 if __name__ == '__main__':
     app.run(debug=True, port=8100)

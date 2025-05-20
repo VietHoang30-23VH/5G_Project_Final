@@ -8,6 +8,8 @@ import numpy as np
 from datetime import datetime, timedelta
 import time
 from components.navbar import create_navbar
+from data.fetch_data import load_raw_network_traffic, load_processed_network_traffic
+from app.callbacks import dashboard_callbacks
 
 colors = {
     'primary': '#1e3a8a',
@@ -35,7 +37,7 @@ def create_network_controls():
                             id="interface-input",
                             type="text",
                             placeholder="eth0",
-                            value="any",
+                            # value="any",
                         ),
                         className="pe-2",
                     ),
@@ -81,7 +83,7 @@ def create_packet_summary():
         dbc.CardHeader(html.H5("Packet Summary", className="fw-bold")),
         dbc.CardBody([
             dbc.Row([
-                dbc.Col(html.Div("Number Packet Captured:"), width=8),
+                dbc.Col(html.Div("Number Flow Captured:"), width=8),
                 dbc.Col(html.Div(id="packet-count", children="0"), width=4, className="text-end fw-bold"),
             ], className="mb-2"),
             dbc.Row([
@@ -206,29 +208,37 @@ def create_network_flow_chart():
 # Create Initial Traffic Table
 def create_initial_traffic_table():
     # Sample data for the table
-    df = pd.DataFrame({
-        "Proto": ["TCP", "UDP", "TCP", "ICMP", "TCP"],
-        "AckDat": ["124ms", "-", "324ms", "-", "296ms"],
-        "sHops": [4, 3, 2, 5, 2],
-        "Seq": [245, "-", 897, "-", 898],
-        "State": ["EST", "-", "SYN", "-", "SYN"],
-        "TcpRtt": ["34ms", "-", "178ms", "-", "163ms"],
-        "dmeansz": [512, 248, 64, 84, 64],
-        "offset": [0, 0, 0, 0, 0],
-        "sttl": [64, 128, 32, 255, 32],
-        "flgs": ["ACK", "-", "SYN", "-", "SYN"],
-        "mean": [128, 64, 32, 42, 32],
-        "cause": ["normal", "normal", "attack", "normal", "attack"],
-    })
+    # df = pd.DataFrame({
+    #     "Proto": ["TCP", "UDP", "TCP", "ICMP", "TCP"],
+    #     "AckDat": ["124ms", "-", "324ms", "-", "296ms"],
+    #     "sHops": [4, 3, 2, 5, 2],
+    #     "Seq": [245, "-", 897, "-", 898],
+    #     "State": ["EST", "-", "SYN", "-", "SYN"],
+    #     "TcpRtt": ["34ms", "-", "178ms", "-", "163ms"],
+    #     "dmeansz": [512, 248, 64, 84, 64],
+    #     "offset": [0, 0, 0, 0, 0],
+    #     "sttl": [64, 128, 32, 255, 32],
+    #     "flgs": ["ACK", "-", "SYN", "-", "SYN"],
+    #     "mean": [128, 64, 32, 42, 32],
+    #     "cause": ["normal", "normal", "attack", "normal", "attack"],
+    # })
+    df = load_raw_network_traffic()
+
+    if df.empty:
+        df = pd.DataFrame(columns=[
+            "Proto","AckDat","sHops","Seq", "State", "TcpRtt", 
+            "dmeansz","offset","sttl", "flgs", "mean", "cause", 
+            "stcpb", "dloss","smeansz","loss", "dttl", "sbytes", "bytes" 
+        ])
     
     # Style conditional for highlighting attack traffic
-    style_data_conditional = [
-        {
-            'if': {'filter_query': '{cause} = "attack"'},
-            'color': colors['danger'],
-            'fontWeight': 'bold'
-        }
-    ]
+    # style_data_conditional = [
+    #     {
+    #         'if': {'filter_query': '{cause} = "attack"'},
+    #         'color': colors['danger'],
+    #         'fontWeight': 'bold'
+    #     }
+    # ]
     
     return dbc.Card([
         dbc.CardHeader(html.H5("Initial Traffic", className="fw-bold")),
@@ -250,7 +260,7 @@ def create_initial_traffic_table():
                     'color': colors['secondary'],
                     'borderBottom': f'1px solid {colors["secondary"]}',
                 },
-                style_data_conditional=style_data_conditional,
+                # style_data_conditional=style_data_conditional,
                 page_size=5,
             )
         ]),
@@ -258,32 +268,40 @@ def create_initial_traffic_table():
 # Create Processed Traffic Table
 def create_processed_traffic_table():
     # Sample data for the table
-    df = pd.DataFrame({
-        "tcp": [1, 0, 1, 0, 1],
-        "AckDat": ["124ms", "-", "324ms", "-", "296ms"],
-        "sHops": [4, 3, 2, 5, 2],
-        "Seq": [245, "-", 897, "-", 898],
-        "RST": [0, 0, 0, 0, 0],
-        "TcpRtt": ["34ms", "-", "178ms", "-", "163ms"],
-        "REQ": ["GET", "-", "SYN", "-", "SYN"],
-        "dMeanPktSz": [512, 248, 64, 84, 64],
-        "Offset": [0, 0, 0, 0, 0],
-        "CON": [1, 0, 0, 0, 0],
-        "FIN": [0, 0, 0, 0, 0],
-        "sTtl": [64, 128, 32, 255, 32],
-        "INT": [0, 1, 0, 0, 0],
-        "Mean": [128, 64, 32, 42, 32],
-        "Status": ["normal", "normal", "attack", "normal", "attack"],
-    })
+    # df = pd.DataFrame({
+    #     "tcp": [1, 0, 1, 0, 1],
+    #     "AckDat": ["124ms", "-", "324ms", "-", "296ms"],
+    #     "sHops": [4, 3, 2, 5, 2],
+    #     "Seq": [245, "-", 897, "-", 898],
+    #     "RST": [0, 0, 0, 0, 0],
+    #     "TcpRtt": ["34ms", "-", "178ms", "-", "163ms"],
+    #     "REQ": ["GET", "-", "SYN", "-", "SYN"],
+    #     "dMeanPktSz": [512, 248, 64, 84, 64],
+    #     "Offset": [0, 0, 0, 0, 0],
+    #     "CON": [1, 0, 0, 0, 0],
+    #     "FIN": [0, 0, 0, 0, 0],
+    #     "sTtl": [64, 128, 32, 255, 32],
+    #     "INT": [0, 1, 0, 0, 0],
+    #     "Mean": [128, 64, 32, 42, 32],
+    #     "Status": ["normal", "normal", "attack", "normal", "attack"],
+    # })
+    df = load_processed_network_traffic()
+    if df.empty:
+        df = pd.DataFrame(columns=[
+            'tcp', 'AckDat', 'sHops', 'Seq', 'RST', 'TcpRtt', 'REQ', 
+            'dMeanPktSz','Offset', 'CON', 'FIN', 'sTtl', ' e        ', 
+            'INT', 'Mean', 'Status', 'icmp', 'SrcTCPBase', ' e d      ', 
+            'sMeanPktSz', 'DstLoss', 'Loss', 'dTtl', 'SrcBytes', 'TotBytes'
+        ])
     
     # Style conditional for highlighting attack traffic
-    style_data_conditional = [
-        {
-            'if': {'filter_query': '{Status} = "attack"'},
-            'color': colors['danger'],
-            'fontWeight': 'bold'
-        }
-    ]
+    # style_data_conditional = [
+    #     {
+    #         'if': {'filter_query': '{Status} = "attack"'},
+    #         'color': colors['danger'],
+    #         'fontWeight': 'bold'
+    #     }
+    # ]
     
     return dbc.Card([
         dbc.CardHeader(html.H5("Processed Traffic",className="fw-bold")),
@@ -305,7 +323,7 @@ def create_processed_traffic_table():
                     'color': colors['secondary'],
                     'borderBottom': f'1px solid {colors["secondary"]}',
                 },
-                style_data_conditional=style_data_conditional,
+                # style_data_conditional=style_data_conditional,
                 page_size=5,
             )
         ]),
