@@ -89,6 +89,15 @@ prediction_results = Table('prediction_results', metadata,
     Column('attack_tool', String),
 )
 
+# Định nghĩa bảng packet_summary
+packet_summary = Table('packet_summary', metadata,
+    Column('id', Integer, primary_key=True),
+    Column('total_flows', Integer),
+    Column('total_bytes', Float),
+    Column('lost', String),
+    Column('capture_duration', String),
+)
+
 # Tạo bảng nếu chưa tồn tại
 metadata.create_all(engine)
 
@@ -149,3 +158,21 @@ def save_predictions(predictions_list):
         logger.error(f"Lỗi khi lưu kết quả dự đoán: {str(e)}")
         return False, f"Lỗi khi lưu kết quả dự đoán: {str(e)}"
 
+def save_packetsummary(summary_data):
+    try:
+        conn = engine.connect()
+        trans = conn.begin()
+        conn.execute(packet_summary.delete())
+
+        conn.execute(insert(packet_summary).values(
+            total_flows=summary_data[0],
+            total_bytes=summary_data[1],
+            lost=summary_data[2],
+            capture_duration=summary_data[3],
+        ))
+        trans.commit()
+        conn.close()
+        return True, "Đã lưu thông tin Packet Summary"
+    except Exception as e:
+        logger.error(f"Lỗi khi lưu Packet Summary: {str(e)}")
+        return False, f"Lỗi khi lưu Packet Summary: {str(e)}"

@@ -10,6 +10,12 @@ import csv
 import argparse
 from data import database
 
+def seconds_to_hms(seconds):
+    hours = seconds // 3600
+    minutes = (seconds % 3600) // 60
+    secs = seconds % 60
+    return f"{int(hours):02}:{int(minutes):02}:{int(secs):02}"
+
 def run_capture(interface, duration):
     APP_NAME = "ArgusTest"
 
@@ -63,20 +69,30 @@ def run_capture(interface, duration):
         logger.error(error)
     else:
         # Tính toán thống kê
-        total_packets = len(df_metric)
+        total_flows = len(df_metric)
         total_bytes = 0
         if 'TotBytes' in df_metric.columns:
             total_bytes = df_metric['TotBytes'].fillna(0).sum()
-        lost_packets = 0
+        lost = 0
         if 'Loss' in df_metric.columns:
-            lost_packets = df_metric['Loss'].fillna(0).sum()
-
+            lost = df_metric['Loss'].fillna(0).sum()
+            lost = str(lost)
+            
         # Hiển thị thống kê
         logger.info("[+] Packet Capture Statistics [+] ")
-        logger.info(f"<> Total packets captured: {total_packets}")
+        logger.info(f"<> Total network flows captured: {total_flows}")
         logger.info(f"<> Total bytes captured: {total_bytes}")
-        logger.info(f"<> Lost packets: {lost_packets}")
+        logger.info(f"<> Lost: {lost}")
         logger.info(f"<> Duration: {capture_duration:.2f}")
+
+        capture_duration = seconds_to_hms(capture_duration)
+        packet_summary_list = [total_flows, total_bytes, lost, capture_duration]
+
+        success, message = database.save_packetsummary(packet_summary_list)
+        if success:
+            logger.info(message)
+        else:
+            logger.error(message)   
 
         # Lưu vào CSV
         timestamp = datetime.datetime.now().strftime("%d%m%Y-%H:%M:%S")

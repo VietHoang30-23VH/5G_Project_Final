@@ -8,7 +8,7 @@ import numpy as np
 from datetime import datetime, timedelta
 import time
 from components.navbar import create_navbar
-from data.fetch_data import load_raw_network_traffic, load_processed_network_traffic
+from data.fetch_data import load_raw_network_traffic, load_processed_network_traffic, load_sample_prediction
 from app.callbacks import dashboard_callbacks
 
 colors = {
@@ -63,16 +63,9 @@ def create_network_controls():
                             className="w-15"
                         ),
                         width=6,
+                        className="d-flex justify-content-center"
                     ),
-                    dbc.Col(
-                        dbc.Button(
-                            "STOP", 
-                            id="stop-button", 
-                            className="w-100"
-                        ),
-                        width=6,
-                    ),
-                ]),
+                ], justify="center"),
             ]),
         ]),
     ], className="shadow-sm", style={"margin-top": "1rem"})
@@ -80,7 +73,7 @@ def create_network_controls():
 # Create Packet Summary Card
 def create_packet_summary():
     return dbc.Card([
-        dbc.CardHeader(html.H5("Packet Summary", className="fw-bold")),
+        dbc.CardHeader(html.H5("Flow Summary", className="fw-bold")),
         dbc.CardBody([
             dbc.Row([
                 dbc.Col(html.Div("Number Flow Captured:"), width=8),
@@ -91,7 +84,7 @@ def create_packet_summary():
                 dbc.Col(html.Div(id="total-bytes", children="0 KB"), width=4, className="text-end fw-bold"),
             ], className="mb-2"),
             dbc.Row([
-                dbc.Col(html.Div("Lost Packets:"), width=8),
+                dbc.Col(html.Div("Lost:"), width=8),
                 dbc.Col(html.Div(id="lost-packets", children="0"), width=4, className="text-end fw-bold text-danger"),
             ], className="mb-2"),
             dbc.Row([
@@ -245,7 +238,7 @@ def create_initial_traffic_table():
         dbc.CardBody([
             dash_table.DataTable(
                 id='initial-traffic-table',
-                columns=[{"name": i, "id": i} for i in df.columns if i != "cause"],
+                columns=[{"name": i, "id": i} for i in df.columns],
                 data=df.to_dict('records'),
                 style_table={'overflowX': 'auto'},
                 style_cell={
@@ -308,7 +301,7 @@ def create_processed_traffic_table():
         dbc.CardBody([
             dash_table.DataTable(
                 id='processed-traffic-table',
-                columns=[{"name": i, "id": i} for i in df.columns if i != "Status"],
+                columns=[{"name": i, "id": i} for i in df.columns],
                 data=df.to_dict('records'),
                 style_table={'overflowX': 'auto'},
                 style_cell={
@@ -324,6 +317,45 @@ def create_processed_traffic_table():
                     'borderBottom': f'1px solid {colors["secondary"]}',
                 },
                 # style_data_conditional=style_data_conditional,
+                page_size=5,
+            )
+        ]),
+    ], className="shadow-sm", style={"margin-top": "1.2rem"})
+def create_sample_prediction_table(): 
+    df = load_sample_prediction()
+    if df.empty:
+        df = pd.DataFrame(columns=[
+            'sample_index', 'time', 'label', 'attack_type', 'attack_tool'
+        ])
+    
+    style_data_conditional = [
+        {
+            'if': {'filter_query': '{label} = "Malicious"'},
+            'color': colors['danger'],
+            'fontWeight': 'bold'
+        }
+    ]
+    return dbc.Card([
+        dbc.CardHeader(html.H5("Sample Prediction",className="fw-bold")),
+        dbc.CardBody([
+            dash_table.DataTable(
+                id='sample-prediction-table',
+                columns=[{"name": i, "id": i} for i in df.columns],
+                data=df.to_dict('records'),
+                style_table={'overflowX': 'auto'},
+                style_cell={
+                    'textAlign': 'left',
+                    'padding': '8px',
+                    'fontFamily': 'Arial, sans-serif',
+                    'fontSize': '13px',
+                },
+                style_header={
+                    'backgroundColor': colors['light'],
+                    'fontWeight': 'bold',
+                    'color': colors['secondary'],
+                    'borderBottom': f'1px solid {colors["secondary"]}',
+                },
+                style_data_conditional=style_data_conditional,
                 page_size=5,
             )
         ]),
@@ -360,44 +392,45 @@ def create_dashboard(username):
                 dbc.Col([
                     create_network_controls(),
                     create_packet_summary(),
-                    create_detection_results(),
-                    create_sample_data_info(),
+                    # create_detection_results(),
+                    # create_sample_data_info(),
                 ], width=3, style={"margin-top": "1rem"}),
                 
                 # Right Column - Network Flow Chart
                 dbc.Col([
-                    create_network_flow_chart(),
+                    # create_network_flow_chart(),
                     create_initial_traffic_table(),
                     create_processed_traffic_table(),
+                    create_sample_prediction_table(),
                 ], width=9),
             ]),
         ], fluid=True, className="py-3 mt-5"),
 ], style={"backgroundColor": colors['background'], "height": "100vh", "width": "100vw"})
 
-# # Callback for updating packet stats when monitoring starts
-# # @app.callback(
-# #     [
-# #         Output("packet-count", "children"),
-# #         Output("total-bytes", "children"),
-# #         Output("lost-packets", "children"),
-# #         Output("duration", "children"),
-# #     ],
-# #     [Input("start-button", "n_clicks")],
-# #     [
-# #         State("interface-input", "value"),
-# #         State("time-input", "value"),
-# #         State("time-unit", "value"),
-# #     ],
-# #     prevent_initial_call=True
-# # )
-def update_packet_stats(n_clicks, interface, time_value, time_unit):
-    if n_clicks is None:
-        return "0", "0 KB", "0", "00:00:00"
+# Callback for updating packet stats when monitoring starts
+# @app.callback(
+#     [
+#         Output("packet-count", "children"),
+#         Output("total-bytes", "children"),
+#         Output("lost-packets", "children"),
+#         Output("duration", "children"),
+#     ],
+#     [Input("start-button", "n_clicks")],
+#     [
+#         State("interface-input", "value"),
+#         State("time-input", "value"),
+#         State("time-unit", "value"),
+#     ],
+#     prevent_initial_call=True
+# )
+# def update_packet_stats(n_clicks, interface, time_value, time_unit):
+#     if n_clicks is None:
+#         return "0", "0 KB", "0", "00:00:00"
     
-    # Simulate packet statistics (in a real application, this would come from actual monitoring)
-    packet_count = 45872
-    total_bytes = "27.5 MB"
-    lost_packets = 127
-    duration = "00:31:45"
+#     # Simulate packet statistics (in a real application, this would come from actual monitoring)
+#     packet_count = 45872
+#     total_bytes = "27.5 MB"
+#     lost_packets = 127
+#     duration = "00:31:45"
     
-    return str(packet_count), total_bytes, str(lost_packets), duration
+#     return str(packet_count), total_bytes, str(lost_packets), duration

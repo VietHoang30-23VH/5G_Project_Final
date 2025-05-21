@@ -30,3 +30,29 @@ def load_processed_network_traffic():
     except Exception as e:
         logger.error(f"Lỗi khi load dữ liệu processed_network_traffic: {str(e)}")
         return pd.DataFrame()  # Trả về DataFrame rỗng nếu lỗi
+    
+def load_sample_prediction():
+    try:
+        df = pd.read_sql_table('prediction_results', con=engine)
+        return df
+    except Exception as e:
+        logger.error(f"Lỗi khi load dữ liệu prediction_results: {str(e)}")
+        return pd.DataFrame()  # Trả về DataFrame rỗng nếu lỗi    
+
+def get_packet_summary():
+    try:    
+        query = "SELECT total_flows, total_bytes, lost, capture_duration FROM packet_summary"
+        df = pd.read_sql(query, engine)
+        if df.empty:
+            return None
+        row = df.iloc[0]
+        packetsummary = {
+            'total_flows': row['total_flows'],
+            'total_bytes': row['total_bytes'],
+            'lost': row['lost'],
+            'capture_duration': row['capture_duration'],
+        }
+        return packetsummary
+    except Exception as e:
+        logger.error(f"Lỗi khi lấy dữ liệu packet summary: {str(e)}")
+        return None
