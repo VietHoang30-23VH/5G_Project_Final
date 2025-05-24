@@ -1,14 +1,13 @@
 # Building interactive dashboard in order to monitor network traffic in 5G environment 
-`This markdown is written by Viet Hoang.`
+`This project is conducted by Viet Hoang and Ba Can.`
 
 **I. Introduction** 
+- 5G Project relates to monitoring 5G network traffic, visualizing with interactive das, making suggestions to prevent network threats.
 - Plotly: graphs, figures: layout, data, trace
-https://plotly.com/python/plotly-fundamentals/
-- Dash: là một Python Framework, dùng để tạo ra các web dashboard có thể tương tác. Có thể kết hợp giữa Python, HTML và js.
+- Dash: web python framework.
 ---
 **II. Set up environment**
 
-*`Windows`*
 1. Create python virtual environment
    
         mkdir 5gdashboard
@@ -17,13 +16,7 @@ https://plotly.com/python/plotly-fundamentals/
         .\mydash5genv\Scripts\activate
 2. Install needed libraries
 
-        pip install numpy==2.0.0
-        pip install pandas==2.2.2
-        pip install plotly=5.22.0
-        pip install dash==2.17.1
-        pip install sqlalchem
-        pip install dash_iconify
-        pip install dash dash-core-components dash-html-components jupyter-dash dash-bootstrap-components
+        sudo pip install -r requirements.txt
 
 3. Deploy locally
         
@@ -48,27 +41,64 @@ https://plotly.com/python/plotly-fundamentals/
 ---
 **III. File Structure**
 
-    5G_dashboard/
-    ├── app/
-    │   ├── __init__.py
-    │   ├── assets/  
-    │   ├── pages/
-    │   │   ├── __init__.py
-    │   │   ├── login.py               # Script cho trang login
-    │   │   ├── dashboard.py           # Script cho trang dashboard
-    │   │   └── home.py                # Trang chính hoặc trang mặc định
-    │   └── callbacks/
-    │       ├── __init__.py
-    │       ├── login_callbacks.py     # Callback cho trang login
-    │       └── dashboard_callbacks.py # Callback cho dashboard
-    ├── data/
-    │   ├── __init__.py
-    │   ├── fetch_data.py              # Script lấy dữ liệu mạng
-    │   └── processed_data/            # Thư mục lưu dữ liệu đã xử lý (nếu cần)
-    ├── main.py                        # File chính để chạy ứng dụng Dash
-    ├── Dockerfile                     # File để triển khai bằng Docker
-    ├── README.md                      # Hướng dẫn dự án
-    └── .gitignore                     # File bỏ qua các tệp không cần thiết
+5G_dashboard/
+├── 5g_monitor.db
+├── app
+│   ├── callbacks
+│   │   ├── dashboard_callbacks.py
+│   │   ├── __init__.py
+│   │   ├── login_callbacks.py
+│   │   └── __pycache__
+│   │       ├── dashboard_callbacks.cpython-312.pyc
+│   │       ├── __init__.cpython-312.pyc 
+│   │       └──  login_callbacks.cpython-312.pyc
+│   ├── __init__.py
+│   ├── pages
+│   │   ├── about.py
+│   │   ├── dashboard.py
+│   │   ├── __init__.py
+│   │   ├── login.py
+│   │   └── __pycache__
+│   │       ├── about.cpython-312.pyc
+│   │       ├── dashboard.cpython-312.pyc
+│   │       ├── data_overview.cpython-312.pyc
+│   │       ├── __init__.cpython-312.pyc
+│   │       └── login.cpython-312.pyc
+│   └── __pycache__
+│       └── __init__.cpython-313.pyc
+├── components
+│   ├── __init__.py
+│   ├── navbar.py
+│   └── __pycache__
+│       ├── __init__.cpython-312.pyc
+│       └── navbar.cpython-313.pyc
+├── data
+│   ├── database.py
+│   ├── fetch_data.py
+│   ├── __init__.py
+│   └── __pycache__
+│       ├── database.cpython-312.pyc
+│       ├── fetch_data.cpython-313.pyc
+│       └── __init__.cpython-313.pyc
+├── Dockerfile
+├── main.py
+├── model
+│   ├── 5gModelBuilding.py
+│   ├── flowcapture.py
+│   └── __pycache__
+│       └── flowcapture.cpython-313.pyc
+├── my_rf_model.joblib
+├── images
+├── requirements.txt
+└── README.md
 
 ---
-`This project is conducted by Viet Hoang and Ba Can.`
+5. Build UI
+Login page 
+![image](images/login_images.png)
+Dashboard page
+![image](images/workplace.png)
+About page
+![image](images/about.png)
+---
+`This markdown is written by Viet Hoang.`

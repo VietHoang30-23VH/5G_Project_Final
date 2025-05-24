@@ -2,7 +2,8 @@ import dash
 from dash import dcc, html
 import dash_bootstrap_components as dbc
 from app.pages import login, dashboard
-from app.callbacks import login_callbacks, dashboard_callbacks, monitoring_callbacks
+from app.callbacks import login_callbacks, dashboard_callbacks
+
 
 # CSS bên ngoài
 external_stylesheets = [
@@ -205,4 +206,4 @@ login_callbacks.register_callbacks(app)
 dashboard_callbacks.network_flow_callbacks(app)
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8100)
+    app.run(debug=True, port=8110)

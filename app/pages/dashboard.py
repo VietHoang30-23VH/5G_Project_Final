@@ -10,6 +10,7 @@ import time
 from components.navbar import create_navbar
 from data.fetch_data import load_raw_network_traffic, load_processed_network_traffic, load_sample_prediction
 from app.callbacks import dashboard_callbacks
+from dash_iconify import DashIconify
 
 colors = {
     'primary': '#1e3a8a',
@@ -62,13 +63,13 @@ def create_network_controls():
                             id="start-button", 
                             className="w-15"
                         ),
-                        width=6,
-                        className="d-flex justify-content-center"
+                        width=8,
+                        className="d-flex justify-content-center mt-4"
                     ),
                 ], justify="center"),
             ]),
         ]),
-    ], className="shadow-sm", style={"margin-top": "1rem"})
+    ], className="shadow-sm", style={"margin-top": "0.5rem"})
 
 # Create Packet Summary Card
 def create_packet_summary():
@@ -92,129 +93,19 @@ def create_packet_summary():
                 dbc.Col(html.Div(id="duration", children="00:00:00"), width=4, className="text-end fw-bold"),
             ], className="mb-2"),
         ]),
-    ], className="shadow-sm mt-1")
+    ], className="shadow-sm mt-3")
 
-# Create Detection Results Card
 def create_detection_results():
     return dbc.Card([
         dbc.CardHeader(html.H5("Detection Results", className="fw-bold")),
-        dbc.CardBody([
-            dbc.Alert(
-                [
-                    html.H6("Alert: DDoS Signature Detected", className="alert-heading"),
-                    html.P([
-                        html.Span("Attack Type: ", className="fw-bold"),
-                        "TCP SYN Flood"
-                    ], className="mb-0"),
-                    html.P([
-                        html.Span("Attack Tool: ", className="fw-bold"),
-                        "Hping3"
-                    ], className="mb-0"),
-                    html.P([
-                        html.Span("Timestamp: ", className="fw-bold"),
-                        "10:42:35-18/05/2025"
-                    ], className="mb-0"),
-                ],
-                color="danger",
-                className="mb-0",
-            ),
-        ]),
-    ], className="shadow-sm mt-1")
-
-# Create Network Flow Chart
-def create_network_flow_chart():
-    # Sample data for the line chart
-    time_range = pd.date_range(
-        start=datetime.now() - timedelta(minutes=30),
-        end=datetime.now(),
-        freq='1min'
-    )
-    
-    # Create normal traffic pattern
-    inbound = [25 + np.random.randint(0, 15) for _ in range(len(time_range))]
-    outbound = [20 + np.random.randint(0, 10) for _ in range(len(time_range))]
-    
-    # Simulate attack spike near the end
-    attack_start = len(time_range) - 8
-    for i in range(attack_start, len(time_range)):
-        severity = (i - attack_start + 1) * 10
-        inbound[i] += min(severity, 60)
-        outbound[i] += min(severity // 2, 30)
-    
-    # Create the figure
-    fig = go.Figure()
-    
-    # Add traces
-    fig.add_trace(go.Scatter(
-        x=time_range, 
-        y=inbound,
-        mode='lines',
-        name='Inbound',
-        line=dict(color=colors['info'], width=2)
-    ))
-    
-    fig.add_trace(go.Scatter(
-        x=time_range, 
-        y=outbound,
-        mode='lines',
-        name='Outbound',
-        line=dict(color=colors['danger'], width=2)
-    ))
-    
-    # Update layout
-    fig.update_layout(
-        title=None,
-        margin=dict(l=40, r=20, t=20, b=20),
-        legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
+        dbc.CardBody(
+            id='detection-results',
+            children="Vui lòng chọn một mẫu để xem kết quả phát hiện."
         ),
-        xaxis=dict(
-            title=None,
-            showgrid=True,
-            gridcolor='rgba(0,0,0,0.1)'
-        ),
-        yaxis=dict(
-            title='Packets/sec',
-            showgrid=True,
-            gridcolor='rgba(0,0,0,0.1)'
-        ),
-        plot_bgcolor=colors['white'],
-        paper_bgcolor=colors['white'],
-    )
-    
-    return dbc.Card([
-        dbc.CardHeader(html.H5("Network Flow", className="fw-bold")),
-        dbc.CardBody([
-            dcc.Graph(
-                id='network-flow-graph',
-                figure=fig,
-                config={'displayModeBar': False},
-                style={'height': '222px'}
-            )
-        ]),
-    ], className="shadow-sm", style={"margin-top": "2rem"})
+    ], className="shadow-sm mt-3")
 
 # Create Initial Traffic Table
 def create_initial_traffic_table():
-    # Sample data for the table
-    # df = pd.DataFrame({
-    #     "Proto": ["TCP", "UDP", "TCP", "ICMP", "TCP"],
-    #     "AckDat": ["124ms", "-", "324ms", "-", "296ms"],
-    #     "sHops": [4, 3, 2, 5, 2],
-    #     "Seq": [245, "-", 897, "-", 898],
-    #     "State": ["EST", "-", "SYN", "-", "SYN"],
-    #     "TcpRtt": ["34ms", "-", "178ms", "-", "163ms"],
-    #     "dmeansz": [512, 248, 64, 84, 64],
-    #     "offset": [0, 0, 0, 0, 0],
-    #     "sttl": [64, 128, 32, 255, 32],
-    #     "flgs": ["ACK", "-", "SYN", "-", "SYN"],
-    #     "mean": [128, 64, 32, 42, 32],
-    #     "cause": ["normal", "normal", "attack", "normal", "attack"],
-    # })
     df = load_raw_network_traffic()
 
     if df.empty:
@@ -223,15 +114,6 @@ def create_initial_traffic_table():
             "dmeansz","offset","sttl", "flgs", "mean", "cause", 
             "stcpb", "dloss","smeansz","loss", "dttl", "sbytes", "bytes" 
         ])
-    
-    # Style conditional for highlighting attack traffic
-    # style_data_conditional = [
-    #     {
-    #         'if': {'filter_query': '{cause} = "attack"'},
-    #         'color': colors['danger'],
-    #         'fontWeight': 'bold'
-    #     }
-    # ]
     
     return dbc.Card([
         dbc.CardHeader(html.H5("Initial Traffic", className="fw-bold")),
@@ -253,31 +135,12 @@ def create_initial_traffic_table():
                     'color': colors['secondary'],
                     'borderBottom': f'1px solid {colors["secondary"]}',
                 },
-                # style_data_conditional=style_data_conditional,
                 page_size=5,
             )
         ]),
-    ], className="shadow-sm", style={"margin-top": "0.5rem"})
+    ], className="shadow-sm mt-4")
 # Create Processed Traffic Table
 def create_processed_traffic_table():
-    # Sample data for the table
-    # df = pd.DataFrame({
-    #     "tcp": [1, 0, 1, 0, 1],
-    #     "AckDat": ["124ms", "-", "324ms", "-", "296ms"],
-    #     "sHops": [4, 3, 2, 5, 2],
-    #     "Seq": [245, "-", 897, "-", 898],
-    #     "RST": [0, 0, 0, 0, 0],
-    #     "TcpRtt": ["34ms", "-", "178ms", "-", "163ms"],
-    #     "REQ": ["GET", "-", "SYN", "-", "SYN"],
-    #     "dMeanPktSz": [512, 248, 64, 84, 64],
-    #     "Offset": [0, 0, 0, 0, 0],
-    #     "CON": [1, 0, 0, 0, 0],
-    #     "FIN": [0, 0, 0, 0, 0],
-    #     "sTtl": [64, 128, 32, 255, 32],
-    #     "INT": [0, 1, 0, 0, 0],
-    #     "Mean": [128, 64, 32, 42, 32],
-    #     "Status": ["normal", "normal", "attack", "normal", "attack"],
-    # })
     df = load_processed_network_traffic()
     if df.empty:
         df = pd.DataFrame(columns=[
@@ -286,15 +149,6 @@ def create_processed_traffic_table():
             'INT', 'Mean', 'Status', 'icmp', 'SrcTCPBase', ' e d      ', 
             'sMeanPktSz', 'DstLoss', 'Loss', 'dTtl', 'SrcBytes', 'TotBytes'
         ])
-    
-    # Style conditional for highlighting attack traffic
-    # style_data_conditional = [
-    #     {
-    #         'if': {'filter_query': '{Status} = "attack"'},
-    #         'color': colors['danger'],
-    #         'fontWeight': 'bold'
-    #     }
-    # ]
     
     return dbc.Card([
         dbc.CardHeader(html.H5("Processed Traffic",className="fw-bold")),
@@ -316,11 +170,10 @@ def create_processed_traffic_table():
                     'color': colors['secondary'],
                     'borderBottom': f'1px solid {colors["secondary"]}',
                 },
-                # style_data_conditional=style_data_conditional,
                 page_size=5,
             )
         ]),
-    ], className="shadow-sm", style={"margin-top": "1.2rem"})
+    ], className="shadow-sm", style={"margin-top": "1rem"})
 def create_sample_prediction_table(): 
     df = load_sample_prediction()
     if df.empty:
@@ -345,7 +198,7 @@ def create_sample_prediction_table():
                 style_table={'overflowX': 'auto'},
                 style_cell={
                     'textAlign': 'left',
-                    'padding': '8px',
+                    'padding': '7px',
                     'fontFamily': 'Arial, sans-serif',
                     'fontSize': '13px',
                 },
@@ -359,23 +212,35 @@ def create_sample_prediction_table():
                 page_size=5,
             )
         ]),
-    ], className="shadow-sm", style={"margin-top": "1.2rem"})
-# Create Sample Data Processing Info
-def create_sample_data_info():
-    return dbc.Card([
+    ], className="shadow-sm", style={"margin-top": "1rem"})
+def copyright_info():
+    return dbc.Card(
         dbc.CardBody([
-            html.P([
-                html.Span("Mẫu 274 with [10:42:35-18/05/2025]:", className="fw-bold"),
-                html.Br(),
-                html.Span("- Label: "), "Malicious",
-                html.Br(),
-                html.Span("- Attack Type: "), "TCP SYN Flood",
-                html.Br(),
-                html.Span("- Attack Tool: "), "Hping3"
-            ], className="mt-1 text-info"),
-        ]),
-    ], className="shadow-sm mt-3 border-info border-start border-4")
+            html.Div([
+                html.Div([
+                    html.Span("© MAY - 2025 ", className="me-1"),
+                    html.Span("VIETHOANG / BACAN", className="fw-bold"),
+                ], className="text-secondary small text-center"),
+                
+                html.Div([
+                    html.A("DASHBOARD CREATION", href="#", className="mx-1 text-decoration-none text-muted small"),
+                    html.Br(),
+                    html.A("FACULTY OF COMPUTER NETWORK AND COMMUNICATION", href="#", className="mx-1 text-decoration-none text-muted small d-block d-md-inline"),
+                    html.Br(),
+                    html.A("5G ARCHITECTURE", href="#", className="mx-1 text-decoration-none text-muted small d-block d-md-inline"),
+                    html.Br(),
+                    html.A("at UNIVERSITY OF INFORMATION TECHNOLOGY", href="#", className="mx-1 text-decoration-none text-muted small d-block d-md-inline"),
+                ], className="text-center mt-2"),
 
+                html.Div([
+                    html.A(DashIconify(icon="mdi:github", width=24), href="https://github.com/VietHoang30-23VH/5G_Project_Final", className="mx-2", target="_blank"),
+                    html.A(DashIconify(icon="mdi:linkedin", width=24), href="https://www.linkedin.com/school/university-of-information-technology", className="mx-2", target="_blank"),
+                    html.A(DashIconify(icon="mdi:facebook", width=24), href="https://www.facebook.com/UIT.Fanpage", className="mx-2", target="_blank"),
+                ], className="text-center mt-3"),
+            ])
+        ]),
+        className="border border-secondary rounded bg-transparent mt-3"
+    )
 # Main layout function
 def create_dashboard(username):
     return html.Div([
@@ -392,45 +257,16 @@ def create_dashboard(username):
                 dbc.Col([
                     create_network_controls(),
                     create_packet_summary(),
-                    # create_detection_results(),
-                    # create_sample_data_info(),
+                    create_detection_results(),
+                    copyright_info(),
                 ], width=3, style={"margin-top": "1rem"}),
                 
                 # Right Column - Network Flow Chart
                 dbc.Col([
-                    # create_network_flow_chart(),
                     create_initial_traffic_table(),
                     create_processed_traffic_table(),
                     create_sample_prediction_table(),
                 ], width=9),
             ]),
-        ], fluid=True, className="py-3 mt-5"),
-], style={"backgroundColor": colors['background'], "height": "100vh", "width": "100vw"})
-
-# Callback for updating packet stats when monitoring starts
-# @app.callback(
-#     [
-#         Output("packet-count", "children"),
-#         Output("total-bytes", "children"),
-#         Output("lost-packets", "children"),
-#         Output("duration", "children"),
-#     ],
-#     [Input("start-button", "n_clicks")],
-#     [
-#         State("interface-input", "value"),
-#         State("time-input", "value"),
-#         State("time-unit", "value"),
-#     ],
-#     prevent_initial_call=True
-# )
-# def update_packet_stats(n_clicks, interface, time_value, time_unit):
-#     if n_clicks is None:
-#         return "0", "0 KB", "0", "00:00:00"
-    
-#     # Simulate packet statistics (in a real application, this would come from actual monitoring)
-#     packet_count = 45872
-#     total_bytes = "27.5 MB"
-#     lost_packets = 127
-#     duration = "00:31:45"
-    
-#     return str(packet_count), total_bytes, str(lost_packets), duration
+        ], fluid=True, className="py-3 mt-5 bg-white"),
+], style={"height": "100vh", "width": "100vw"})

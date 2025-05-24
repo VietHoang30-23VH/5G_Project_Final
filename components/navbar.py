@@ -11,8 +11,7 @@ def create_navbar(username):
             ),
             dbc.Nav(
                 [
-                    dbc.NavItem(dbc.NavLink("WORKPLACE", href="/", active="exact", className="nav-link-custom text-light fs-5")),
-                    dbc.NavItem(dbc.NavLink("OVERVIEW", href="/data-overview", active="exact", className="nav-link-custom fs-5")),
+                    dbc.NavItem(dbc.NavLink("WORKPLACE", href="/dashboard", active="exact", className="nav-link-custom text-light fs-5")),
                     dbc.NavItem(dbc.NavLink("ABOUT", href="/about", active="exact", className="nav-link-custom fs-5")),
                 ],
                 className="mx-auto",
@@ -22,10 +21,16 @@ def create_navbar(username):
             dbc.Nav(
                 [
                     html.Span(f"Welcome, {username} !", style={"color": "white", "margin-right": "10px","margin-top": "10px", "font-size": "20px"}),
-                    html.A(
-                        dbc.Button("LOG OUT", className="me-2"),
-                        href="/logout",
-                    ),
+                    dbc.Button(
+                        "LOG OUT",
+                        id="logout-button",  
+                        n_clicks=0,        
+                        className="me-2",
+                        style={
+                            "height": "3rem",
+                            "width": "auto"
+                        }
+                    )
                 ],
                 className="ml-auto",
                 navbar=True
