@@ -1,6 +1,8 @@
 import pandas as pd
 import logging
 from sqlalchemy import create_engine
+from data.database import prediction_results
+from sqlalchemy import select, bindparam  # Thêm import cho select và bindparam
 
 # Thiết lập logging
 logger = logging.getLogger('Database')
@@ -56,3 +58,11 @@ def get_packet_summary():
     except Exception as e:
         logger.error(f"Lỗi khi lấy dữ liệu packet summary: {str(e)}")
         return None
+    
+def get_detection_results_by_sample_index(sample_index):
+
+    conn = engine.connect()
+    query = select(prediction_results).where(prediction_results.c.sample_index == bindparam('sample_idx'))
+    results = conn.execute(query, {'sample_idx': sample_index}).fetchall()
+    conn.close()
+    return results

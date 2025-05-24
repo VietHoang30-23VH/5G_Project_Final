@@ -20,7 +20,7 @@
 
 3. Deploy locally
         
-        python main.py
+        sudo python main.py
 
 4. Description about output from command line
 

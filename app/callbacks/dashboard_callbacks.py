@@ -2,11 +2,8 @@ from dash import Output, Input, State, no_update, html
 import subprocess
 from io import StringIO
 from model.flowcapture import run_capture
-from data.fetch_data import load_raw_network_traffic, load_processed_network_traffic, get_packet_summary, load_sample_prediction
-# Thêm các import cần thiết
-from data.database import engine, prediction_results
+from data.fetch_data import load_raw_network_traffic, load_processed_network_traffic, get_packet_summary, load_sample_prediction, get_detection_results_by_sample_index
 import dash_bootstrap_components as dbc
-from sqlalchemy import select, bindparam  # Thêm import cho select và bindparam
 
 def network_flow_callbacks(app):
     from app.pages.dashboard import create_dashboard
@@ -76,11 +73,7 @@ def network_flow_callbacks(app):
             selected_sample = data[row]
             sample_index = selected_sample['sample_index']
             
-            # Truy vấn cơ sở dữ liệu để lấy kết quả phát hiện cho sample_index
-            conn = engine.connect()
-            query = select(prediction_results).where(prediction_results.c.sample_index == bindparam('sample_idx'))
-            results = conn.execute(query, {'sample_idx': sample_index}).fetchall()
-            conn.close()
+            results = get_detection_results_by_sample_index(sample_index)
             
             # Tạo danh sách các cảnh báo
             alerts = []

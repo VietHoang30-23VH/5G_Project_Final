@@ -223,21 +223,18 @@ def copyright_info():
                 ], className="text-secondary small text-center"),
                 
                 html.Div([
-                    html.A("DASHBOARD CREATION", href="#", className="mx-1 text-decoration-none text-muted small"),
+                    html.A("UNIVERSITY OF INFORMATION TECHNOLOGY", href="#", className="mx-1 text-decoration-none text-muted small"),
                     html.Br(),
                     html.A("FACULTY OF COMPUTER NETWORK AND COMMUNICATION", href="#", className="mx-1 text-decoration-none text-muted small d-block d-md-inline"),
-                    html.Br(),
-                    html.A("5G ARCHITECTURE", href="#", className="mx-1 text-decoration-none text-muted small d-block d-md-inline"),
-                    html.Br(),
-                    html.A("at UNIVERSITY OF INFORMATION TECHNOLOGY", href="#", className="mx-1 text-decoration-none text-muted small d-block d-md-inline"),
                 ], className="text-center mt-2"),
 
                 html.Div([
-                    html.A(DashIconify(icon="mdi:github", width=24), href="https://github.com/VietHoang30-23VH/5G_Project_Final", className="mx-2", target="_blank"),
+                    # html.A(DashIconify(icon="mdi:github", width=24), href="https://github.com/VietHoang30-23VH/5G_Project_Final", className="mx-2", target="_blank"),
                     html.A(DashIconify(icon="mdi:linkedin", width=24), href="https://www.linkedin.com/school/university-of-information-technology", className="mx-2", target="_blank"),
                     html.A(DashIconify(icon="mdi:facebook", width=24), href="https://www.facebook.com/UIT.Fanpage", className="mx-2", target="_blank"),
+                    html.A(DashIconify(icon="mdi:web", width=24), href="https://www.uit.edu.vn/", className="mx-2", target="_blank"),
                 ], className="text-center mt-3"),
-            ])
+            ])  
         ]),
         className="border border-secondary rounded bg-transparent mt-3"
     )

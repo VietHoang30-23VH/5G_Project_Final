@@ -285,31 +285,6 @@ plt.tight_layout()
 plt.savefig('normalized_confusion_matrix.png', dpi=300, bbox_inches='tight')
 plt.show()
 
-# Data tự input
-# sample_dict = [
-#     {
-#         'tcp': 0, 'AckDat': 0, 'sHops': 1, 'Seq': 47138, 'RST': 0, 'TcpRtt': 0, 'REQ': 1,
-#         'dMeanPktSz': 0, 'Offset': 19272380, 'CON': 0, 'FIN': 0, 'sTtl': 63, ' e        ': 1,
-#         'INT': 0, 'Mean': 2.582307, 'Status': 1, 'icmp': 0, 'SrcTCPBase': -1, ' e d      ': 0,
-#         'sMeanPktSz': 42, 'DstLoss': 0, 'Loss': 0, 'dTtl': -1, 'SrcBytes': 84, 'TotBytes': 84
-#     },
-#     {
-#         'tcp': 1, 'AckDat': 0, 'sHops': 10, 'Seq': 20000, 'RST': 0, 'TcpRtt': 12, 'REQ': 0,
-#         'dMeanPktSz': 500, 'Offset': 10000, 'CON': 0, 'FIN': 0, 'sTtl': 64, ' e        ': 0,
-#         'INT': 20, 'Mean': 1.2, 'Status': 0, 'icmp': 0, 'SrcTCPBase': 0, ' e d      ': 0,
-#         'sMeanPktSz': 512, 'DstLoss': 0, 'Loss': 0, 'dTtl': 64, 'SrcBytes': 1024, 'TotBytes': 2048
-#     },
-#         {
-#         'tcp': 1, 'AckDat': 0.024088, 'sHops': 1, 'Seq': 17276, 'RST': 0, 'TcpRtt': 0.026046, 'REQ': 0,
-#         'dMeanPktSz': 66, 'Offset': 10098024, 'CON': 0, 'FIN': 1, 'sTtl': 63, ' e        ': 1,
-#         'INT': 0, 'Mean': 0, 'Status': 1, 'icmp': 0, 'SrcTCPBase': 4238886840, ' e d      ': 0,
-#         'sMeanPktSz': 66, 'DstLoss': 0, 'Loss': 0, 'dTtl': 59, 'SrcBytes': 66, 'TotBytes': 132
-#     }
-# ]
-# sample_df = pd.DataFrame(sample_dict)
-# sample_df = sample_df[X_train.columns]
-# sample_df = sample_df.fillna(0)
-
 # Data lấy csv chỉ đủ 28
 csv_data = pd.read_csv('/content/drive/MyDrive/5G_model/4_Records_Test.csv')
 

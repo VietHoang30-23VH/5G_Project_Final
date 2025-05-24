@@ -5,9 +5,12 @@ def create_navbar(username):
     return dbc.Navbar(
         [
             dbc.NavbarBrand(
-                "5G Network Dashboard",
+                html.Span([
+                     html.I(className="fas fa-tachometer-alt me-2"),  # icon dashboard
+                     "5G Network Monitor"
+                ]),
                 href="/",
-                className="navbar-brand-custom ms-2 fs-3 fw-semibold",
+                className="navbar-brand-custom ms-2 fs-3 fw-semibold"
             ),
             dbc.Nav(
                 [
