@@ -41,57 +41,58 @@
 ---
 **III. File Structure**
 
-   5G_dashboard/
-   ├── 5g_monitor.db                 # Cơ sở dữ liệu SQLite chính
-   ├── app/                         # Thư mục chứa logic chính của ứng dụng
-   │   ├── callbacks/               # Callback cho các thành phần tương tác Dash
-   │   │   ├── dashboard_callbacks.py
-   │   │   ├── login_callbacks.py
-   │   │   ├── __init__.py
-   │   │   └── __pycache__/
-   │   │       ├── dashboard_callbacks.cpython-312.pyc
-   │   │       ├── login_callbacks.cpython-312.pyc
-   │   │       └── __init__.cpython-312.pyc
-   │   ├── pages/                   # Các trang giao diện (multi-page app)
-   │   │   ├── about.py
-   │   │   ├── dashboard.py
-   │   │   ├── login.py
-   │   │   ├── __init__.py
-   │   │   └── __pycache__/
-   │   │       ├── about.cpython-312.pyc
-   │   │       ├── dashboard.cpython-312.pyc
-   │   │       ├── data_overview.cpython-312.pyc
-   │   │       ├── login.cpython-312.pyc
-   │   │       └── __init__.cpython-312.pyc
-   │   ├── __init__.py
-   │   └── __pycache__/
-   │       └── __init__.cpython-313.pyc
-   ├── components/                  # Các thành phần giao diện dùng chung (ví dụ: navbar)
-   │   ├── navbar.py
-   │   ├── __init__.py
-   │   └── __pycache__/
-   │       ├── navbar.cpython-313.pyc
-   │       └── __init__.cpython-312.pyc
-   ├── data/                        # Xử lý và truy xuất dữ liệu
-   │   ├── database.py
-   │   ├── fetch_data.py
-   │   ├── __init__.py
-   │   └── __pycache__/
-   │       ├── database.cpython-312.pyc
-   │       ├── fetch_data.cpython-313.pyc
-   │       └── __init__.cpython-313.pyc
-   ├── model/                       # Các mô hình học máy và xử lý lưu lượng
-   │   ├── 5gModelBuilding.py
-   │   ├── flowcapture.py
-   │   └── __pycache__/
-   │       └── flowcapture.cpython-313.pyc
-   ├── images/                      # Thư mục chứa hình ảnh (nếu có)
-   ├── my_rf_model.joblib           # Mô hình Random Forest đã huấn luyện
-   ├── Dockerfile                   # Dockerfile để build image ứng dụng
-   ├── main.py                      # File chính để khởi chạy ứng dụng Dash
-   ├── requirements.txt             # Danh sách thư viện Python cần cài đặt
-   └── README.md                    # Tài liệu mô tả dự án
-
+```plaintext
+5G_dashboard/
+├── 5g_monitor.db                # Cơ sở dữ liệu SQLite chính
+├── app/                         # Thư mục chứa logic chính của ứng dụng
+│   ├── callbacks/               # Callback cho các thành phần tương tác Dash
+│   │   ├── dashboard_callbacks.py
+│   │   ├── login_callbacks.py
+│   │   ├── __init__.py
+│   │   └── __pycache__/
+│   │       ├── dashboard_callbacks.cpython-312.pyc
+│   │       ├── login_callbacks.cpython-312.pyc
+│   │       └── __init__.cpython-312.pyc
+│   ├── pages/                   # Các trang giao diện (multi-page app)
+│   │   ├── about.py
+│   │   ├── dashboard.py
+│   │   ├── login.py
+│   │   ├── __init__.py
+│   │   └── __pycache__/
+│   │       ├── about.cpython-312.pyc
+│   │       ├── dashboard.cpython-312.pyc
+│   │       ├── data_overview.cpython-312.pyc
+│   │       ├── login.cpython-312.pyc
+│   │       └── __init__.cpython-312.pyc
+│   ├── __init__.py
+│   └── __pycache__/
+│       └── __init__.cpython-313.pyc
+├── components/                  # Các thành phần giao diện dùng chung (ví dụ: navbar)
+│   ├── navbar.py
+│   ├── __init__.py
+│   └── __pycache__/
+│       ├── navbar.cpython-313.pyc
+│       └── __init__.cpython-312.pyc
+├── data/                        # Xử lý và truy xuất dữ liệu
+│   ├── database.py
+│   ├── fetch_data.py
+│   ├── __init__.py
+│   └── __pycache__/
+│       ├── database.cpython-312.pyc
+│       ├── fetch_data.cpython-313.pyc
+│       └── __init__.cpython-313.pyc
+├── model/                       # Các mô hình học máy và xử lý lưu lượng
+│   ├── 5gModelBuilding.py
+│   ├── flowcapture.py
+│   └── __pycache__/
+│       └── flowcapture.cpython-313.pyc
+├── images/                      # Thư mục chứa hình ảnh (nếu có)
+├── my_rf_model.joblib           # Mô hình Random Forest đã huấn luyện
+├── Dockerfile                   # Dockerfile để build image ứng dụng
+├── main.py                      # File chính để khởi chạy ứng dụng Dash
+├── requirements.txt             # Danh sách thư viện Python cần cài đặt
+└── README.md                    # Tài liệu mô tả dự án
+```
 ---
 5. Build UI
 Login page 
