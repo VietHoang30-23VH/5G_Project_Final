@@ -13,7 +13,7 @@ handler.setFormatter(formatter)
 logger.addHandler(handler)
 
 # Kết nối tới SQLite database
-engine = create_engine('sqlite:///5g_monitor.db')
+engine = create_engine('sqlite:////stored/5g_monitor.db')
 
 # Hàm load dữ liệu từ bảng raw_network_traffic
 def load_raw_network_traffic():
