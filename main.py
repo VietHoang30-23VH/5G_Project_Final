@@ -205,4 +205,4 @@ login_callbacks.register_callbacks(app)
 dashboard_callbacks.network_flow_callbacks(app)
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8110)
+    app.run(host="0.0.0.0", debug=True, port=8110)
