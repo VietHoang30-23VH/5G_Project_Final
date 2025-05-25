@@ -52,7 +52,7 @@ def run_capture(interface, duration):
     # Lấy dữ liệu mạng
     error, df_metric = argus_client.get_metric(
         path_to_ra="/usr/local/bin/ra",
-        server="192.168.123.5",
+        server="argus-server",
         port=561,
         duration_in_seconds=duration,
     )
