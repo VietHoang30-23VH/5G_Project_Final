@@ -8,5 +8,4 @@ dash-html-components
 dash-bootstrap-components 
 dash_iconify 
 joblib
-xmlrpc
 xlrd
