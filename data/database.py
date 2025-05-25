@@ -12,7 +12,7 @@ handler.setFormatter(formatter)
 logger.addHandler(handler)
 
 # Tạo kết nối đến cơ sở dữ liệu SQLite
-engine = create_engine('sqlite:///5g_monitor.db')
+engine = create_engine('sqlite:////stored/5g_monitor.db')
 metadata = MetaData()
 
 # Định nghĩa bảng users
