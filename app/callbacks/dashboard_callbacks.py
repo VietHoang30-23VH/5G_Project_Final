@@ -1,13 +1,9 @@
 from dash import Output, Input, State, no_update, html
-import subprocess
-from io import StringIO
 from model.flowcapture import run_capture
 from data.fetch_data import load_raw_network_traffic, load_processed_network_traffic, get_packet_summary, load_sample_prediction, get_detection_results_by_sample_index
 import dash_bootstrap_components as dbc
 
 def network_flow_callbacks(app):
-    from app.pages.dashboard import create_dashboard
-    
     @app.callback(
         [Output("processed-traffic-table", "data"),
          Output('initial-traffic-table', 'data'),

@@ -1,7 +1,6 @@
 import dash
 from dash import dcc, html
 import dash_bootstrap_components as dbc
-from app.pages import login, dashboard
 from app.callbacks import login_callbacks, dashboard_callbacks
 
 

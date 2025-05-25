@@ -3,7 +3,6 @@ from dash import dcc
 from data.database import users, engine
 from app.pages.login import create_login_layout
 from app.pages.dashboard import create_dashboard
-from components.navbar import create_navbar
 from app.pages.about import create_about_layout
 import hashlib
 

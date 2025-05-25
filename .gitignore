@@ -75,3 +75,7 @@ coverage.xml
 pylint-report.txt
 
 *.csv
+
+Dockerfile
+
+*.yaml

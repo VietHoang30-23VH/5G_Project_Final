@@ -1,15 +1,8 @@
-import dash
-from dash import html, dcc, dash_table, Input, Output, State, callback
+from dash import html, dash_table
 import dash_bootstrap_components as dbc
-import plotly.graph_objects as go
-import plotly.express as px
 import pandas as pd
-import numpy as np
-from datetime import datetime, timedelta
-import time
 from components.navbar import create_navbar
 from data.fetch_data import load_raw_network_traffic, load_processed_network_traffic, load_sample_prediction
-from app.callbacks import dashboard_callbacks
 from dash_iconify import DashIconify
 
 colors = {

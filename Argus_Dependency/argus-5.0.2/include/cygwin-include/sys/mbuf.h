@@ -1,6 +1,0 @@
-
-/* 
- * $Id: $
- * $DateTime: $
- * $Change: $
- */

@@ -3,9 +3,10 @@ pandas
 plotly
 dash
 sqlalchemy
-dash_iconify
-dash 
 dash-core-components 
 dash-html-components 
 dash-bootstrap-components 
 dash_iconify 
+joblib
+xmlrpc
+xlrd

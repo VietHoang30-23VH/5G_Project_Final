@@ -1,13 +1,9 @@
-from argus_tool import argus, argus_client
-import time
+from argus_tool import argus_client
 import logging
 import datetime
 import pytz
 from joblib import load
 import pandas as pd
-import os
-import csv
-import argparse
 from data import database
 
 def seconds_to_hms(seconds):
@@ -30,7 +26,7 @@ def run_capture(interface, duration):
     handler.setFormatter(formatter)
     logger.addHandler(handler)
 
-    # Khởi động Argus server
+    """# Khởi động Argus server
     started, process = argus.start_argus(
         path_to_argus='/usr/local/sbin/argus',
         interface=interface,
@@ -47,7 +43,7 @@ def run_capture(interface, duration):
             if is_running:
                 logger.info(f"The argus server is running PID = {pid}.")
                 break
-
+    """
     # Ghi lại thời gian bắt đầu
     start_time = datetime.datetime.now()
     print('-' * 210)
@@ -56,7 +52,7 @@ def run_capture(interface, duration):
     # Lấy dữ liệu mạng
     error, df_metric = argus_client.get_metric(
         path_to_ra="/usr/local/bin/ra",
-        server="localhost",
+        server="192.168.123.5",
         port=561,
         duration_in_seconds=duration,
     )
@@ -94,14 +90,14 @@ def run_capture(interface, duration):
         else:
             logger.error(message)   
 
-        # Lưu vào CSV
+        """# Lưu vào CSV
         timestamp = datetime.datetime.now().strftime("%d%m%Y-%H:%M:%S")
         csv_filename = f"argus_capture_{timestamp}.csv"
         logger.info(f" [+] Network Traffic saved to {csv_filename}.")
         print('-' * 210)
         print(" [+] Initial Traffic: ")
         print(df_metric)
-        print('-' * 210)
+        print('-' * 210)"""
 
         # Lưu dữ liệu ban đầu (df_metric) vào cơ sở dữ liệu
         success, message = database.save_df_to_database(df_metric, "raw_network_traffic")
@@ -143,7 +139,7 @@ def run_capture(interface, duration):
 
         # Điền giá trị NaN bằng 0
         df_final = df_final.fillna(0)
-        df_final.to_csv(csv_filename, index=False)  # Lưu traffic đã xử lý vào file CSV
+        #df_final.to_csv(csv_filename, index=False)  # Lưu traffic đã xử lý vào file CSV
 
         # Lưu dữ liệu đã xử lý (df_final) vào cơ sở dữ liệu
         success, message = database.save_df_to_database(df_final, "processed_network_traffic")
@@ -159,24 +155,17 @@ def run_capture(interface, duration):
         predictions_list = []
 
         # Lưu kết quả dự đoán vào CSV
-        with open('prediction_results.txt', mode='w', newline='') as file:
+        """with open('prediction_results.txt', mode='w', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(['Sample Index', 'Time', 'Label', 'Attack Type', 'Attack Tool'])
-            print("\nPresenting Results:")
-            for idx, y_pred in enumerate(y_preds):
-                try:
-                    label, attack_type, tool = y_pred.split('_')
-                except:
-                    label, attack_type, tool = y_pred, 'Unknown', 'Unknown'
-                current_time = datetime.datetime.now(pytz.timezone('Etc/GMT-7')).strftime("%H:%M:%S-%d/%m/%Y")
-                print("="*50)
-                print(f"Sample {idx + 1} [{current_time}]:")
-                print(f"  - Label        : {label}")
-                print(f"  - Attack Type  : {attack_type}")
-                print(f"  - Attack Tool  : {tool}\n")
-                writer.writerow([idx + 1, current_time, label, attack_type, tool])
-                # Thêm vào danh sách dự đoán
-                predictions_list.append((idx + 1, current_time, label, attack_type, tool))
+            print("\nPresenting Results:")"""
+        for idx, y_pred in enumerate(y_preds):
+            try:
+                label, attack_type, tool = y_pred.split('_')
+            except:
+                label, attack_type, tool = y_pred, 'Unknown', 'Unknown'
+            current_time = datetime.datetime.now(pytz.timezone('Etc/GMT-7')).strftime("%H:%M:%S-%d/%m/%Y")
+            predictions_list.append((idx + 1, current_time, label, attack_type, tool))
 
         # Lưu kết quả dự đoán vào cơ sở dữ liệu
         success, message = database.save_predictions(predictions_list)
@@ -186,7 +175,7 @@ def run_capture(interface, duration):
             logger.error(message)               
 
     # Dừng Argus server
-    if started:
+    """if started:
         argus.kill_argus(process)
     else:
         argus.kill_argus()
@@ -197,4 +186,4 @@ def run_capture(interface, duration):
         is_running, pid = argus.is_argus_running()
         if not is_running:
             logger.info("The argus server is stopped.")
-            break
+            break"""
